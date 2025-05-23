@@ -4,6 +4,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import 'yup-phone-lite';
 import css from './ContactForm.module.css';
+import { useDispatch } from 'react-redux';
+import { addContact } from '../../redux/contactsSlice';
 
 const OrderSchema = Yup.object().shape({
   username: Yup.string()
@@ -15,14 +17,19 @@ const OrderSchema = Yup.object().shape({
     .required('A phone number is required'),
 });
 
-export default function ContactForm({ onSubmit }) {
+export default function ContactForm() {
+  const dispatch = useDispatch();
+
   const fieldId = useId();
+
   const handleSubmit = (value, helpers) => {
-    onSubmit({
-      id: nanoid(),
-      name: value.username,
-      number: value.usernumber,
-    });
+    dispatch(
+      addContact({
+        id: nanoid(),
+        name: value.username,
+        number: value.usernumber,
+      }),
+    );
 
     helpers.resetForm();
   };
